@@ -1,4 +1,6 @@
-#include <cstddef> /*size_t*/
+#ifndef TREE_H_
+#define TREE_H_
+#include <stddef.h> /*size_t*/
 
 typedef struct {
 	int (*compar)(void const *, void const *); /*Функция сортировки*/
@@ -25,3 +27,5 @@ int TreeRemove(Tree *, void * const key);
 
 /*Копирование элемента по ключу key из дерева в dest*/
 int TreeCopy(Tree *, void * const key, void * dest);
+
+#endif // !TREE_H_

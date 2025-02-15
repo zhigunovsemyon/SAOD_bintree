@@ -2,10 +2,13 @@
 #define TREE_H_
 #include <stddef.h> /*size_t*/
 
+/*Функция сортировки*/
+typedef int (*compar_fn)(void const *, void const *);
+
 typedef struct {
-	int (*compar)(void const *, void const *); /*Функция сортировки*/
-	size_t esize;				   /*Размер данных в элементе*/
-	struct TreeNode * root;			   /*Указатель на корень*/
+	compar_fn compar;	/*Функция сортировки*/
+	size_t esize;		/*Размер данных в элементе*/
+	struct TreeNode * root; /*Указатель на корень*/
 } Tree;
 
 struct TreeNode {

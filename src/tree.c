@@ -1,21 +1,19 @@
 #include "tree.h"
-#include <malloc.h> /*malloc*/
+#include <malloc.h> /*malloc(), free()*/
+#include <string.h> /*memcpy()*/
 
-static struct TreeNode **
-TreeFind_(struct TreeNode ** tree, compar_fn compar, void const * key)
+static struct TreeNode * TreeRightmostNode_(struct TreeNode * tree)
 {
-	if (*tree == NULL)
-		return tree;
+	while (tree->r != NULL)
+		tree = tree->r;
+	return tree;
+}
 
-	/*Сохранение результата сравения*/
-	int cmp_res = compar(key, *tree);
-
-	if (cmp_res == 0)
-		return tree;
-	/*Если ключ меньше ячейки, поиск продолжается в левой части,
-	 * если больше -- в правой*/
-	return TreeFind_(cmp_res < 0 ? &((*tree)->l) : &((*tree)->r), compar,
-			 key);
+static struct TreeNode * TreeLeftmostNode_(struct TreeNode * tree)
+{
+	while (tree->l != NULL)
+		tree = tree->l;
+	return tree;
 }
 
 static void TreeFree_(struct TreeNode ** node)
@@ -60,7 +58,9 @@ void TreeFree(Tree * pTree)
 }
 
 /*Вставка элемента данных*/
-int TreeInsert(Tree * pTree, void * const src) {}
+int TreeInsert(Tree * pTree, void * const src)
+{
+}
 
 /*Удаление элемента с переданным ключом*/
 int TreeRemove(Tree * pTree, void * const key) {}

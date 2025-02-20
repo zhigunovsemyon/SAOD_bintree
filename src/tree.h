@@ -22,7 +22,7 @@ Tree * TreeInit(size_t esize, int (*)(void const *, void const *));
 /*Уничтожение дерева*/
 void TreeFree(Tree *);
 
-/*Вставка элемента данных*/
+/*Вставка элемента данных. Возврат -1 при неудаче*/
 int TreeInsert(Tree *, void * const src);
 
 /*Удаление элемента с переданным ключом*/

@@ -6,7 +6,7 @@
 
 static inline bool NodeIsLeaf(struct TreeNode * node)
 {
-	return !(node->l && node->r);
+	return (node->l == NULL && node->r == NULL);
 }
 
 /*

@@ -26,9 +26,9 @@ void TreeFree(Tree *);
 int TreeInsert(Tree *, void * const src);
 
 /*Удаление элемента с переданным ключом*/
-int TreeRemove(Tree *, void * const key);
+// int TreeRemove(Tree *, void * const key);
 
 /*Копирование элемента по ключу key из дерева в dest*/
-int TreeCopy(Tree *, void * const key, void * dest);
+// int TreeCopy(Tree *, void * const key, void * dest);
 
 #endif // !TREE_H_

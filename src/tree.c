@@ -1,8 +1,15 @@
 #include "tree.h"
 #include <assert.h>
-#include <malloc.h> /*malloc(), free()*/
-#include <string.h> /*memcpy()*/
+#include <malloc.h>  /*malloc(), free()*/
+#include <stdbool.h> /*memcpy()*/
+#include <string.h>  /*memcpy()*/
 
+static inline bool NodeIsLeaf(struct TreeNode * node)
+{
+	return !(node->l && node->r);
+}
+
+/*
 static struct TreeNode * TreeRightmostNode_(struct TreeNode * tree)
 {
 	while (tree->r != NULL)
@@ -16,6 +23,7 @@ static struct TreeNode * TreeLeftmostNode_(struct TreeNode * tree)
 		tree = tree->l;
 	return tree;
 }
+*/
 
 static void TreeFree_(struct TreeNode ** node)
 {
@@ -23,15 +31,14 @@ static void TreeFree_(struct TreeNode ** node)
 	if ((*node) == NULL)
 		return;
 
-	/*Если ячейка является листом (не имеет потомков)*/
-	if ((*node)->l == NULL || (*node)->r == NULL) {
-		free(*node);
-		*node = NULL;
-		return;
+	/*Если ячейка не является листом (не имеет потомков)*/
+	if (!NodeIsLeaf(*node)) {
+		TreeFree_(&((*node)->l));
+		TreeFree_(&((*node)->r));
 	}
-
-	TreeFree_(&((*node)->l));
-	TreeFree_(&((*node)->r));
+	free(*node);
+	*node = NULL;
+	return;
 }
 
 /*Инициализация дерева. Принимает функцию распределения и размер данных*/
@@ -104,11 +111,12 @@ static int TreeInsert_(struct TreeNode ** pNode,
 /*Вставка элемента данных*/
 int TreeInsert(Tree * pTree, void * const src)
 {
-	return TreeInsert_(&pTree->root, NULL, src, pTree->compar, pTree->esize);
+	return TreeInsert_(&pTree->root, NULL, src, pTree->compar,
+			   pTree->esize);
 }
 
 /*Удаление элемента с переданным ключом*/
-int TreeRemove(Tree * pTree, void * const key) {}
+// int TreeRemove(Tree * pTree, void * const key) {}
 
 /*Копирование элемента по ключу key из дерева в dest*/
-int TreeCopy(Tree * pTree, void * const key, void * dest) {}
+// int TreeCopy(Tree * pTree, void * const key, void * dest) {}

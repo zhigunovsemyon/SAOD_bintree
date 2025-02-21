@@ -1,15 +1,15 @@
 #include "tree.h"
 #include <assert.h>
 #include <malloc.h>  /*malloc(), free()*/
-#include <stdbool.h> /*memcpy()*/
+#include <stdbool.h> /*bool*/
 #include <string.h>  /*memcpy()*/
 
+/*
 static inline bool NodeIsLeaf(struct TreeNode * node)
 {
 	return (node->l == NULL && node->r == NULL);
 }
 
-/*
 static struct TreeNode * TreeRightmostNode_(struct TreeNode * tree)
 {
 	while (tree->r != NULL)
@@ -31,11 +31,10 @@ static void TreeFree_(struct TreeNode ** node)
 	if ((*node) == NULL)
 		return;
 
-	/*Если ячейка не является листом (не имеет потомков)*/
-	if (!NodeIsLeaf(*node)) {
-		TreeFree_(&((*node)->l));
-		TreeFree_(&((*node)->r));
-	}
+	/*Очистка в ветвях*/
+	TreeFree_(&((*node)->l));
+	TreeFree_(&((*node)->r));
+
 	free(*node);
 	*node = NULL;
 	return;
@@ -81,16 +80,16 @@ NodeNew_(struct TreeNode * p, void * const src, size_t esize)
 	return pNode;
 }
 
-static int TreeInsert_(struct TreeNode ** pNode,
-		       struct TreeNode * pParentNode,
-		       void * const src,
-		       compar_fn compar,
-		       size_t esize)
+static bool TreeInsert_(struct TreeNode ** pNode,
+			struct TreeNode * pParentNode,
+			void * const src,
+			compar_fn compar,
+			size_t esize)
 {
 	if (*pNode == NULL) {
 		*pNode = NodeNew_(pParentNode, src, esize);
-		return (*pNode) ? 1 : 0; /*true при удачной записи, false при
-					    ошибке malloc*/
+		return (*pNode) ? true : false; /*true при удачной записи, false
+					    при ошибке malloc*/
 	}
 	/*Здесь и далее pNode не указывает на null-указатель*/
 	assert(*pNode != NULL);

@@ -4,23 +4,13 @@
 #include <stdbool.h> /*bool*/
 #include <string.h>  /*memcpy()*/
 
-/*
-static inline bool NodeIsLeaf(struct TreeNode * node)
-{
-	return (node->l == NULL && node->r == NULL);
-}
-*/
-
 static struct TreeNode ** TreeRightmostNode_(struct TreeNode ** const ogNode)
 {
 	assert(ogNode != NULL);
 	assert(*ogNode != NULL);
 
-	// struct TreeNode ** pNode = ogNode;
-	// while ((*pNode)->r != NULL)
-	// 	(*pNode) = (*pNode)->r;
-	// return pNode;
-	return ((*ogNode)->r == NULL) ? ogNode : TreeRightmostNode_(&(*ogNode)->r);
+	return ((*ogNode)->r == NULL) ? ogNode
+				      : TreeRightmostNode_(&(*ogNode)->r);
 }
 
 static struct TreeNode ** TreeLeftmostNode_(struct TreeNode ** const ogNode)
@@ -28,15 +18,10 @@ static struct TreeNode ** TreeLeftmostNode_(struct TreeNode ** const ogNode)
 	assert(ogNode != NULL);
 	assert(*ogNode != NULL);
 
-	return ((*ogNode)->l == NULL) ? ogNode : TreeLeftmostNode_(&(*ogNode)->l);
-
-	// struct TreeNode ** pNode = ogNode;
-	// while ((*pNode)->l != NULL)
-	// 	(*pNode) = (*pNode)->l;
-	// return pNode;
+	return ((*ogNode)->l == NULL) ? ogNode
+				      : TreeLeftmostNode_(&(*ogNode)->l);
 }
 
-// [[maybe_unused]]
 static void TreeFree_(struct TreeNode ** node)
 {
 	/*Если передана пустая ячейка*/
@@ -241,7 +226,5 @@ int TreeCopy(Tree * pTree, void * const key, void * dest)
 void TreeFree(Tree * pTree)
 {
 	TreeFree_(&(pTree->root));
-	// while (pTree->root != NULL)
-	// 	NodeRemove_(&pTree->root);
 	free(pTree);
 }

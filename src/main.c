@@ -39,8 +39,6 @@ Tree * mt;
 int main()
 {
 	int a[] = {1, 4, 7, 2, 3, -8, 0};
-	/*Потеряны 2 и -8*/
-	// int a[] = {0, 1, -1, 2, -2, 3, -3, 4, -4};
 
 	mt = TreeInit(sizeof(int), cmp_int);
 
@@ -51,7 +49,6 @@ int main()
 		fputs("Введите число: ", stdout);
 		if (scanf("%d", &guess) < 1)
 			break;
-		// if(TreeBelongs(mt, &guess)){
 		if (TreeRemove(mt, &guess)) {
 			puts("Вы угадали!");
 			if (mt->root == NULL)
@@ -60,7 +57,6 @@ int main()
 				continue;
 		}
 		puts("Попробуйте снова");
-
 	} while (1);
 
 	TreeFree(mt);

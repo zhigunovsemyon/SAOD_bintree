@@ -9,22 +9,31 @@ static inline bool NodeIsLeaf(struct TreeNode * node)
 {
 	return (node->l == NULL && node->r == NULL);
 }
-
-static struct TreeNode * TreeRightmostNode_(struct TreeNode * tree)
-{
-	while (tree->r != NULL)
-		tree = tree->r;
-	return tree;
-}
-
-static struct TreeNode * TreeLeftmostNode_(struct TreeNode * tree)
-{
-	while (tree->l != NULL)
-		tree = tree->l;
-	return tree;
-}
 */
 
+static struct TreeNode ** TreeRightmostNode_(struct TreeNode ** const ogNode)
+{
+	assert(ogNode != NULL);
+	assert(*ogNode != NULL);
+
+	struct TreeNode ** pNode = ogNode;
+	while ((*pNode)->r != NULL)
+		(*pNode) = (*pNode)->r;
+	return pNode;
+}
+
+static struct TreeNode ** TreeLeftmostNode_(struct TreeNode ** const ogNode)
+{
+	assert(ogNode != NULL);
+	assert(*ogNode != NULL);
+
+	struct TreeNode ** pNode = ogNode;
+	while ((*pNode)->l != NULL)
+		(*pNode) = (*pNode)->l;
+	return pNode;
+}
+
+[[maybe_unused]]
 static void TreeFree_(struct TreeNode ** node)
 {
 	/*Если передана пустая ячейка*/
@@ -55,13 +64,6 @@ Tree * TreeInit(size_t esize, int (*compar)(void const *, void const *))
 	pTree->root = NULL;
 
 	return pTree;
-}
-
-/*Уничтожение дерева*/
-void TreeFree(Tree * pTree)
-{
-	TreeFree_(&(pTree->root));
-	free(pTree);
 }
 
 static struct TreeNode *
@@ -107,14 +109,14 @@ static bool TreeInsert_(struct TreeNode ** pNode,
 		       : TreeInsert_(&(*pNode)->r, *pNode, src, compar, esize);
 }
 
-int TreeInsertArray(Tree *pTree, void * const data, size_t arrlen)
+int TreeInsertArray(Tree * pTree, void * const data, size_t arrlen)
 {
 	int count = 0;
-	for (size_t i = 0; i < arrlen; ++i){
-		if(TreeInsert(pTree, data + i))
+	for (size_t i = 0; i < arrlen; ++i) {
+		if (TreeInsert(pTree, data + i * pTree->esize))
 			++count;
 		else
-		 	break;
+			break;
 	}
 	return count;
 }
@@ -128,7 +130,6 @@ int TreeInsert(Tree * pTree, void * const src)
 
 static struct TreeNode **
 TreeLocate_(struct TreeNode ** pNode, void * const key, compar_fn compar)
-// size_t esize)
 {
 	if (*pNode == NULL)
 		return pNode;
@@ -144,12 +145,74 @@ TreeLocate_(struct TreeNode ** pNode, void * const key, compar_fn compar)
 	}
 	/*else*/
 	return (cmp_res > 0)
-		       ? TreeLocate_(&(*pNode)->l, key, compar /*, esize*/)
-		       : TreeLocate_(&(*pNode)->r, key, compar /*, esize*/);
+		       ? TreeLocate_(&(*pNode)->l, key, compar)
+		       : TreeLocate_(&(*pNode)->r, key, compar);
+}
+
+static void NodeRemove_(struct TreeNode ** pNode)
+{
+	assert(*pNode != NULL);
+	/*Сохранение указателя на удаляемый элемент*/
+	struct TreeNode * rem = *pNode;
+	/*Элемент на замену*/
+	struct TreeNode * Replacement = NULL;
+
+	/*Если у ноды есть левый потомок, самый правый элемент в левой половине
+	 * ставится на место ноды*/
+	if (rem->l != NULL) {
+		/*Извлечение самого правого элемента*/
+		struct TreeNode ** pRightmost = TreeRightmostNode_(&rem->l);
+		Replacement = *pRightmost;
+		*pRightmost = Replacement->l;
+
+		/*Перестановка указателей в извлечённом элементе*/
+		Replacement->p = rem->p;
+		Replacement->l = rem->l;
+		Replacement->r = rem->r;
+
+		/*Подстановка указателя в другом потомке на
+		 * новую родительскую ноду*/
+		if (rem->r != NULL)
+			rem->r->p = Replacement;
+	} else if (rem->r != NULL) {
+		/*Если у ноды нет левого потомка, но есть правый, самый левый
+		 * элемент в правой половине ставится на место ноды*/
+
+		/*Извлечение самого левого элемента*/
+		struct TreeNode ** pLeftmost = TreeLeftmostNode_(&rem->r);
+		Replacement = *pLeftmost;
+		*pLeftmost = Replacement->r;
+
+		/*Перестановка указателей в извлечённом элементе*/
+		Replacement->p = rem->p;
+		Replacement->l = rem->l;
+		Replacement->r = rem->r;
+
+		/*Подстановка указателя в другом потомке на
+		 * новую родительскую ноду*/
+		if (rem->l != NULL)
+			rem->l->p = Replacement;
+	}
+	/*Если нода является листом, указатель будет перезаисан NULLом */
+
+	/*Подстановка на место удаляемого*/
+	*pNode = Replacement;
+	/*Очистка*/
+	free(rem);
 }
 
 /*Удаление элемента с переданным ключом*/
-// int TreeRemove(Tree * pTree, void * const key) {}
+int TreeRemove(Tree * pTree, void * const key)
+{
+	struct TreeNode ** pNode =
+		TreeLocate_(&pTree->root, key, pTree->compar);
+	if (*pNode == NULL)
+		return 0;
+
+	assert(*pNode == NULL);
+	NodeRemove_(pNode);
+	return 1;
+}
 
 int TreeBelongs(Tree * pTree, void * const key)
 {
@@ -168,4 +231,13 @@ int TreeCopy(Tree * pTree, void * const key, void * dest)
 	/*else*/
 	memcpy(dest, (*pNode)->data, pTree->esize);
 	return 1;
+}
+
+/*Уничтожение дерева*/
+void TreeFree(Tree * pTree)
+{
+	// TreeFree_(&(pTree->root));
+	while (pTree->root != NULL)
+		NodeRemove_(&pTree->root);
+	free(pTree);
 }

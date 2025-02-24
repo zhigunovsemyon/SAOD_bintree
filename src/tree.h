@@ -28,8 +28,8 @@ int TreeInsert(Tree *, void * const src);
 /*Вставка массива элементов данных. Возврат количества вставленных элементов */
 int TreeInsertArray(Tree *, void * const data, size_t arrlen);
 
-/*Удаление элемента с переданным ключом*/
-// int TreeRemove(Tree *, void * const key);
+/*Удаление элемента с переданным ключом. Возврат 0 при неудаче, 1 при удаче*/
+int TreeRemove(Tree *, void * const key);
 
 /*Копирование элемента по ключу key из дерева в dest.
  * Возвращает 1 при удаче, 0 при неудаче*/

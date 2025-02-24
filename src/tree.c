@@ -33,7 +33,7 @@ static struct TreeNode ** TreeLeftmostNode_(struct TreeNode ** const ogNode)
 	return pNode;
 }
 
-[[maybe_unused]]
+// [[maybe_unused]]
 static void TreeFree_(struct TreeNode ** node)
 {
 	/*Если передана пустая ячейка*/
@@ -209,7 +209,7 @@ int TreeRemove(Tree * pTree, void * const key)
 	if (*pNode == NULL)
 		return 0;
 
-	assert(*pNode == NULL);
+	assert(*pNode != NULL);
 	NodeRemove_(pNode);
 	return 1;
 }
@@ -236,8 +236,8 @@ int TreeCopy(Tree * pTree, void * const key, void * dest)
 /*Уничтожение дерева*/
 void TreeFree(Tree * pTree)
 {
-	// TreeFree_(&(pTree->root));
-	while (pTree->root != NULL)
-		NodeRemove_(&pTree->root);
+	TreeFree_(&(pTree->root));
+	// while (pTree->root != NULL)
+	// 	NodeRemove_(&pTree->root);
 	free(pTree);
 }

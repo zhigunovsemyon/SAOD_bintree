@@ -114,8 +114,46 @@ int TreeInsert(Tree * pTree, void * const src)
 			   pTree->esize);
 }
 
+static struct TreeNode ** TreeLocate_(struct TreeNode ** pNode,
+				     void * const key,
+				     compar_fn compar)
+				     // size_t esize)
+{
+	if (*pNode == NULL) 
+		return pNode;
+
+	/*Здесь и далее pNode не указывает на null-указатель*/
+	assert(*pNode != NULL);
+
+	int cmp_res = compar((*pNode)->data, key);
+
+	/*Если под pNode находится элемент, равный источнику*/
+	if (cmp_res == 0) {
+		return pNode;
+	}
+	/*else*/
+	return (cmp_res > 0)
+		       ? TreeLocate_(&(*pNode)->l, key, compar/*, esize*/)
+		       : TreeLocate_(&(*pNode)->r, key, compar/*, esize*/);
+}
+
 /*Удаление элемента с переданным ключом*/
 // int TreeRemove(Tree * pTree, void * const key) {}
 
+int TreeBelongs(Tree *pTree, void * const key)
+{
+	struct TreeNode **pNode = TreeLocate_(&pTree->root,key,pTree->compar);
+	return (*pNode != NULL) ? 1 : 0;
+
+}
+
 /*Копирование элемента по ключу key из дерева в dest*/
-// int TreeCopy(Tree * pTree, void * const key, void * dest) {}
+int TreeCopy(Tree * pTree, void * const key, void * dest) 
+{
+	struct TreeNode **pNode = TreeLocate_(&pTree->root,key,pTree->compar);
+	if (*pNode == NULL)
+		return 0;
+	/*else*/
+	memcpy(dest, (*pNode)->data, pTree->esize);
+	return 1;
+}

@@ -28,7 +28,12 @@ int TreeInsert(Tree *, void * const src);
 /*Удаление элемента с переданным ключом*/
 // int TreeRemove(Tree *, void * const key);
 
-/*Копирование элемента по ключу key из дерева в dest*/
-// int TreeCopy(Tree *, void * const key, void * dest);
+/*Копирование элемента по ключу key из дерева в dest.
+ * Возвращает 1 при удаче, 0 при неудаче*/
+int TreeCopy(Tree *, void * const key, void * dest);
+
+/*Проверка элемента по ключу key из дерева на наличие.
+ * Возвращает 1 при удаче, 0 при неудаче*/
+int TreeBelongs(Tree *, void * const key);
 
 #endif // !TREE_H_

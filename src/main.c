@@ -17,8 +17,20 @@ int main()
 
 	Tree * mt = TreeInit(sizeof(int), cmp_int);
 
-	for (size_t i = 0; i < (sizeof(a) / sizeof(*a)); ++i)
-		TreeInsert(mt, a + i);
+	TreeInsertArray(mt, a, sizeof(a)/sizeof(*a));
+
+	do {
+		int guess;
+		fputs("Введите число: ",stdout);
+		if (scanf("%d", &guess) < 1)
+			break;
+		if(TreeBelongs(mt, &guess)){
+			puts("Вы угадали!");
+			break;
+		}
+		puts("Попробуйте снова");
+
+	}while (1);
 
 	TreeFree(mt);
 	return 0;

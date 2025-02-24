@@ -16,10 +16,11 @@ static struct TreeNode ** TreeRightmostNode_(struct TreeNode ** const ogNode)
 	assert(ogNode != NULL);
 	assert(*ogNode != NULL);
 
-	struct TreeNode ** pNode = ogNode;
-	while ((*pNode)->r != NULL)
-		(*pNode) = (*pNode)->r;
-	return pNode;
+	// struct TreeNode ** pNode = ogNode;
+	// while ((*pNode)->r != NULL)
+	// 	(*pNode) = (*pNode)->r;
+	// return pNode;
+	return ((*ogNode)->r == NULL) ? ogNode : TreeRightmostNode_(&(*ogNode)->r);
 }
 
 static struct TreeNode ** TreeLeftmostNode_(struct TreeNode ** const ogNode)
@@ -27,10 +28,12 @@ static struct TreeNode ** TreeLeftmostNode_(struct TreeNode ** const ogNode)
 	assert(ogNode != NULL);
 	assert(*ogNode != NULL);
 
-	struct TreeNode ** pNode = ogNode;
-	while ((*pNode)->l != NULL)
-		(*pNode) = (*pNode)->l;
-	return pNode;
+	return ((*ogNode)->l == NULL) ? ogNode : TreeLeftmostNode_(&(*ogNode)->l);
+
+	// struct TreeNode ** pNode = ogNode;
+	// while ((*pNode)->l != NULL)
+	// 	(*pNode) = (*pNode)->l;
+	// return pNode;
 }
 
 // [[maybe_unused]]
@@ -50,7 +53,7 @@ static void TreeFree_(struct TreeNode ** node)
 }
 
 /*Инициализация дерева. Принимает функцию распределения и размер данных*/
-Tree * TreeInit(size_t esize, int (*compar)(void const *, void const *))
+Tree * TreeInit(size_t esize, compar_fn compar)
 {
 	if (esize == 0 || compar == NULL)
 		return NULL;
@@ -144,9 +147,8 @@ TreeLocate_(struct TreeNode ** pNode, void * const key, compar_fn compar)
 		return pNode;
 	}
 	/*else*/
-	return (cmp_res > 0)
-		       ? TreeLocate_(&(*pNode)->l, key, compar)
-		       : TreeLocate_(&(*pNode)->r, key, compar);
+	return (cmp_res > 0) ? TreeLocate_(&(*pNode)->l, key, compar)
+			     : TreeLocate_(&(*pNode)->r, key, compar);
 }
 
 static void NodeRemove_(struct TreeNode ** pNode)
@@ -162,8 +164,9 @@ static void NodeRemove_(struct TreeNode ** pNode)
 	if (rem->l != NULL) {
 		/*Извлечение самого правого элемента*/
 		struct TreeNode ** pRightmost = TreeRightmostNode_(&rem->l);
+		assert((*pRightmost)->p != NULL);
 		Replacement = *pRightmost;
-		*pRightmost = Replacement->l;
+		*pRightmost = Replacement->l; // Сносит старый указатель на
 
 		/*Перестановка указателей в извлечённом элементе*/
 		Replacement->p = rem->p;
@@ -180,6 +183,7 @@ static void NodeRemove_(struct TreeNode ** pNode)
 
 		/*Извлечение самого левого элемента*/
 		struct TreeNode ** pLeftmost = TreeLeftmostNode_(&rem->r);
+		assert((*pLeftmost)->p != NULL);
 		Replacement = *pLeftmost;
 		*pLeftmost = Replacement->r;
 

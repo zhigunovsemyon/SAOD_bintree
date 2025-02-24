@@ -34,13 +34,11 @@ void printIntTree(Tree * pTree)
 	printIntTree_(pTree->root);
 }
 
-Tree * mt;
-
 int main()
 {
 	int a[] = {1, 4, 7, 2, 3, -8, 0};
 
-	mt = TreeInit(sizeof(int), cmp_int);
+	Tree * mt = TreeInit(sizeof(int), cmp_int);
 
 	TreeInsertArray(mt, a, sizeof(a) / sizeof(*a));
 	do {

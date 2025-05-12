@@ -24,6 +24,7 @@ static struct TreeNode ** TreeLeftmostNode_(struct TreeNode ** const ogNode)
 				      : TreeLeftmostNode_(&(*ogNode)->l);
 }
 
+/*Очистка дерева обратным обходом LRN*/
 static void TreeFree_(struct TreeNode ** node)
 {
 	/*Если передана пустая ячейка*/
@@ -118,6 +119,7 @@ int TreeInsert(Tree * pTree, void * const src)
 			   pTree->esize);
 }
 
+/*Прямой NLR поиск по дереву*/
 static struct TreeNode **
 TreeLocate_(struct TreeNode ** pNode, void * const key, compar_fn compar)
 {

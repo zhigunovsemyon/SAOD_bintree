@@ -1,7 +1,7 @@
 #include "tree.h"
 #include <stdio.h>
 
-int cmp_int(void const * a, void const * b)
+static int cmp_int(void const * a, void const * b)
 {
 	if (*(int *)a > *(int *)b)
 		return 1;
@@ -11,7 +11,7 @@ int cmp_int(void const * a, void const * b)
 		return 0;
 }
 
-void printIntTree_(struct TreeNode * pNode)
+static void printIntTreeNLR_(struct TreeNode * pNode)
 {
 	if (!pNode)
 		return;
@@ -24,14 +24,14 @@ void printIntTree_(struct TreeNode * pNode)
 	putc('\n', stdout);
 
 	printf("l:\n");
-	printIntTree_(pNode->l);
+	printIntTreeNLR_(pNode->l);
 	printf("r:\n");
-	printIntTree_(pNode->r);
+	printIntTreeNLR_(pNode->r);
 }
 
 void printIntTree(Tree * pTree)
 {
-	printIntTree_(pTree->root);
+	printIntTreeNLR_(pTree->root);
 }
 
 int main()

@@ -4,6 +4,8 @@
 #include <stdbool.h> /*bool*/
 #include <string.h>  /*memcpy()*/
 
+typedef char byte;
+
 static struct TreeNode ** TreeRightmostNode_(struct TreeNode ** const ogNode)
 {
 	assert(ogNode != NULL);
@@ -101,7 +103,7 @@ int TreeInsertArray(Tree * pTree, void * const data, size_t arrlen)
 {
 	int count = 0;
 	for (size_t i = 0; i < arrlen; ++i) {
-		if (TreeInsert(pTree, data + i * pTree->esize))
+		if (TreeInsert(pTree, (byte *)data + i * pTree->esize))
 			++count;
 		else
 			break;

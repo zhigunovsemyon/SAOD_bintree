@@ -27,6 +27,7 @@ static void printIntTreeNLR_(struct TreeNode * pNode)
 	printIntTreeNLR_(pNode->l);
 	printf("r:\n");
 	printIntTreeNLR_(pNode->r);
+	putchar('\n');
 }
 
 void printIntTree(Tree * pTree)
